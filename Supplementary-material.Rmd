@@ -1,0 +1,102 @@
+---
+title: "Supplementary material"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+doc.type <- knitr::opts_knit$get('rmarkdown.pandoc.to')
+if (is.null(doc.type))
+  doc.type <- "X" # so code will run when not knitting
+
+options(scipen=999)
+
+```
+
+```{r load, include = F}
+library(knitr)
+library(tidyverse)
+
+# kableExtra won't work with word as used below
+if (doc.type != "docx") {
+  library(kableExtra)
+}
+
+# ggplot 2 set up 
+theme_set(theme_classic())
+```
+
+```{r read data, include= FALSE}
+# read aggregated patient characteristics data
+# Belgium data
+if(!file.exists("Output/Belgium_patient_characteristics.csv"))
+  source("R/Belgium_characterisation.R")
+belgium <- read_csv("Output/Belgium_patient_characteristics.csv")
+
+# CPRD data
+if(!file.exists("Output/CPRD_patient_characteristics.csv"))
+  source("R/CPRD_characterisation.R")
+cprd <- read_csv("Output/CPRD_patient_characteristics.csv")
+
+# Open claims
+if(!file.exists("Output/Openclaims_patient_characteristics.csv"))
+  source("R/Openclaims_characterisation.R")
+open_claims <- read_csv("Output/Openclaims_patient_characteristics.csv")
+
+patient_characteristics <- bind_rows("Belgium (IQVIA LPD Belgium)" = belgium, "UK (CPRD)" = cprd, 
+                                     "US (IQVIA OpenClaims)" = open_claims, 
+                                     .id = "Database")
+```
+
+```{r read incidence data, include = F}
+if(!file.exists("Output/Incidence_summary.csv"))
+  source("R/Incidence.R")
+
+summary_incidence <- read_csv("Output/Incidence_summary.csv")
+
+```
+
+```{r}
+# rename some items
+# define database names
+db_names <- c(ambemr = "US (AmbEMR)", belgium = "Belgium (IQVIA LPD Belgium)", 
+              cprd = "UK (CPRD)", open = "US (IQVIA OpenClaims)")
+
+summary_incidence[summary_incidence$db_id == "AMBEMR202005", "db_id"] <- db_names["ambemr"]
+summary_incidence[summary_incidence$db_id == "BELG202006", "db_id"] <- db_names["belgium"]
+summary_incidence[summary_incidence$db_id == "cdmgold202007", "db_id"] <- db_names["cprd"]
+summary_incidence[summary_incidence$db_id == "OPEN202005", "db_id"] <- db_names["open"]
+
+```
+
+```{r add-N}
+# add number of cases to the patient characteristics table from incidence data
+patient_characteristics <- patient_characteristics %>% 
+  inner_join(select(summary_incidence, year, db_id, cases), 
+             by = c("Year" = "year", "Database" = "db_id")) %>% 
+  rename(Cases = cases)
+```
+
+
+```{r all-characteristics-table, warning = T, echo = F}
+
+if (doc.type == "docx") {
+  patient_characteristics %>%
+    kable(caption = "Characterisation of patients undergoing ASAD in Belgium (IQVIA LPD Belgium), UK (CPRD) and US (IQVIA OpenClaims), data", 
+          align = "c")
+} else {
+  patient_characteristics %>%
+    select(-Database) %>%
+    kbl(caption = "Characterisation of patients undergoing ASAD in Belgium (IQVIA LPD Belgium), UK (CPRD) and US (IQVIA OpenClaims), data", 
+        align = "c") %>% 
+        pack_rows(index = c("Belgium (IQVIA LPD Belgium)" = nrow(belgium), "UK (CPRD)" = nrow(cprd),
+            "US (IQVIA OpenClaims)" = nrow(open_claims)))
+  }
+
+if (patient_characteristics[1,1] != "Belgium (IQVIA LPD Belgium)" |
+    patient_characteristics[16,1]!= "UK (CPRD)" |
+    patient_characteristics[25,1]!= "US (IQVIA OpenClaims)")
+  stop("Order or rows of table may have changed, grouping might be incorrect in the overall table")
+
+```

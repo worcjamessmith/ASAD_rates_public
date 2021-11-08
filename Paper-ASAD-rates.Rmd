@@ -1,0 +1,300 @@
+---
+title: "International impact of large multi-centre surgical trials of arthroscopic subacromial decompression"
+output:
+  bookdown::pdf_document2: 
+    keep_tex: no
+    toc: false
+    number_sections: false
+  bookdown::word_document2:
+    toc: false
+    reference_docx: paper/my_style.docx
+    number_sections: false
+  bookdown::html_document2:
+    toc: false
+bibliography: Paper/references.bib
+csl: Paper/bmj.csl
+---
+
+
+James A. Smith^1,2,3^, Kristin Kostka^1,3,4^, David J. Beard^1,2^, Andrew J. Carr^1,2^, Jonathan L. Rees^1,2^, Daniel Prieto-Alhambra^1,2,3^
+
+1. Botnar Research Centre, Nuffield Department of Orthopaedics, Rheumatology and Musculoskeletal Sciences, University of Oxford, UK
+
+2. National Institute for Health Research Oxford Biomedical Research Centre, John Radcliffe Hospital, Oxford, UK
+
+3. Centre for Statistics in Medicine, Nuffield Department of Orthopaedics, Rheumatology and Musculoskeletal Sciences, University of Oxford, UK
+
+4. The OHDSI Center at the Roux Institute, Northeastern University, Portland, ME, USA
+
+Authors for correspondence: Daniel Prieto-Alhambra (daniel.prietoalhambra@ndorms.ox.ac.uk) or James A. Smith (james.smith2@ndorms.ox.ac.uk).
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+
+options(scipen=999)
+
+```
+
+```{r load, include = F}
+library(knitr)
+library(ggpubr)
+library(tidyverse)
+library(scales) # for pretty_breaks()
+
+# ggplot 2 set up 
+theme_set(theme_classic())
+```
+
+```{r functions}
+# number formatting
+fInt <- function(n) {
+  return(format(n, big.mark=","))
+}
+```
+
+```{r read incidence data, include = F}
+if(!file.exists("Output/Incidence_stratified.csv") || !file.exists("Output/Incidence_summary.csv"))
+  source("R/Incidence.R")
+
+stratified_incidence <- read_csv("Output/Incidence_stratified.csv") 
+summary_incidence <- read_csv("Output/Incidence_summary.csv")
+
+```
+
+# Abstract
+
+**Objectives**
+
+To examine temporal trends in incidence of arthroscopic subacromial decompression (ASAD) surgery internationally during conduct and after publication of placebo controlled trials finding no evidence of meaningful benefit of ASAD for shoulder impingement. 
+
+**Design**
+
+Observational retrospective study.
+
+**Setting**
+
+Large routinely collected datasets were used: outpatient data from Belgium and UK, and insurance claims and outpatient data from US. UK data were from Clinical Practice Research Datalink and Belgium and US data were from IQVIA. US and UK data spanned 2005 – 2019 and Belgium data 2011 – 2019. 
+
+**Participants**
+
+Patients were eligible for inclusion in the study if they had at least one visit recorded in the database in a given year and cases were defined as patients undergoing ASAD for the first time in their records in a given year.
+
+**Outcome measures**
+
+We calculated incidence of ASAD over time, overall and stratified by age and sex. Characteristics of patients undergoing ASAD were also assessed over time.
+
+**Results**
+
+UK incidence has fallen since a peak of 4.7 per 10,000 person years in 2011 (when the CSAW trial began) to 1.8 in 2019. US incidence shows no clear pattern and remains consistently higher than the UK, at 11.5 per 100,000 person years in 2019. Changes in incidence patterns were similar across different age groups and sexes. The number of cases in Belgium was too small for meaningful conclusions.
+
+**Conclusions**
+
+We found ASAD rates have fallen in the UK during conduct and after publication of two large surgical RCTs from the UK and Finland that questioned the effectiveness of ASAD for shoulder impingement.  A similar impact on clinical practice has not been seen in US. Further work to understand the barriers or concerns preventing international uptake of high quality evidence into clinical practice is needed.
+
+# Strengths and limitations of this study
+
+* This is most comprehensive study of ASAD incidence we are aware of. Routinely collected datasets were used to assess proportions of the patients undergoing this procedure in several countries
+* Standardised case definitions were used across databases to increase comparability of findings
+* Temporal changes in database coverage and quality of reporting can influence findings.  The observed variation in ASAD incidence may not be entirely attributable to changes in ASAD surgery rates. 
+
+# Introduction 
+Evidence-based medicine requires that high-quality evidence be translated into widespread clinical practice. Randomised surgical trials are increasing in frequency, yet their influence on changing surgical practice is not well characterised. In this study, we investigate the changing incidence of the most common shoulder operation (arthroscopic subacromial decompression) before, during and after the conduct of two large pragmatic randomised controlled trials[@beardArthroscopicSubacromialDecompression2018; @paavolaSubacromialDecompressionDiagnostic2018] and a rapid recommendation[@vandvikSubacromialDecompressionSurgery2019].
+
+Painful shoulder is common, with a prevalence (in 2000) of 2.4% of primary care consultations in the UK[@linsellPrevalenceIncidenceAdults2006] and 4.5 million visits to physicians in 2002 in the USA[@ohIndicationsRotatorCuff2007]. Sub-acromial pain accounts for up to 70% of all shoulder pain problems[@mitchellShoulderPainDiagnosis2005]. Surgical intervention by arthroscopic subacromial decompression (ASAD) is a common treatment for sub-acromial pain after failed non-operative treatment: from 2006/2007 to 2016/2017 in England its use increased by 91% from 30 to 52 procedures per 100,000, and use is higher internationally (e.g. 131 per 100,000 in Finland in 2011 [@jonesLongitudinalStudyUse2019]). This use imposes a significant economic cost, costing over £1 billion in the UK alone over a ten year period [@jonesLongitudinalStudyUse2019].
+
+This rapid increase in ASAD surgery was accompanied by observational and interventional evidence with conflicting findings[@bhattacharyyaDoesArthroscopicSubacromial2014; @broxArthroscopicSurgeryCompared1993; @haahrExercisesArthroscopicDecompression2005; @ketolaDoesArthroscopicAcromioplasty2009]. Two multi-centre placebo surgery controlled trials were subsequently conducted and published in 2018: the CSAW trial[@beardArthroscopicSubacromialDecompression2018], recruiting in the UK from 2012 to 2015, and the FIMPACT trial[@paavolaSubacromialDecompressionDiagnostic2018], recruiting in Finland from 2005 to 2013. Both did not find evidence of clinically relevant differences in primary outcomes between ASAD and diagnostic arthroscopy (i.e. placebo surgery) for patients with subacromial pain and intact rotator cuff tendons. A 2019 Cochrane review, including eight trials, then found high certainty evidence that SAD does not provide clinically important benefits[@karjalainenSubacromialDecompressionSurgery2019].
+
+Anecdotal evidence of the international response in the provision of ASAD of different health care systems to these high-quality RCT findings seems to suggest that the incorporation of research evidence into practice is varied. In the UK and within 6 months of publication of the CSAW trial, NHS England put ASAD on a list of ‘procedures of limited value’, meaning that it should only be performed in limited circumstances[@EvidenceBasedInterventionsConsultation2018]. In Scotland, ASAD declined consistently from 2014-2018, with the largest decrease from 2017 to 2018 coinciding with the publication of the two randomised trials[@jenkinsChangingIncidenceArthroscopic2020]. However, data evaluating changes in ASAD incidence since publication of the trials in the rest of the UK are not yet available.
+
+More broadly, international comparisons of ASAD incidence rates based on recent data are not available. Data from Florida (USA), New York (USA), Western Australia and Finland indicate that ASAD is more common than in England[@jonesLongitudinalStudyUse2019], but these data are (at the most recent) from 2013. A recent study assessing the incidence of ASAD in the US found evidence of declining use from 2010 to 2018[@curtisNationalTrendsShow2021], but a similar analysis has not been conducted for the UK. 
+
+This study aimed to assess the impact of the existence and publication of major ASAD trials on surgical practice. The study used large routinely collected data sets from the US, Belgium and UK to examine the temporal trends in ASAD incidence and any trends in the characteristics of patients undergoing ASAD surgery.
+
+# Methods 
+
+This study is reported according to the STROBE reporting guideline [@vonelmStrengtheningReportingObservational2007]. 
+
+## Study design and setting 
+We did a retrospective study to describe ASAD incidence in Europe and the US and examined the trends in characteristics of patients undergoing ASAD. Incidence data were stratified according to age and gender, and patient characteristics were age, gender, Charlson index [@charlsonNewMethodClassifying1987] and medicine use in the previous month (additional characteristics were examined and are given in the aggregated data on GitHub where feasible: XXX[link to be added]).
+
+## Setting and data sources 
+We retrieved primary care data from the UK, US and Belgium, in October and November 2020 from patients undergoing ASAD from 2005 to 2019 for the first time in their records in a given year. Follow-up time points extended from the beginning of each calendar year to the earliest of the end of that year, death, transfer out date (i.e. the date of the patient leaving the index general practice, or changing insurance providers), and ASAD surgery.
+
+Outpatient electronic medical records (EMR) from Belgium, UK and US were collected. We additionally collected insurance claims data for the US, because US EMR data cover a much smaller fraction of the population. US and Belgium Data were from IQVIA and UK data were from Clinical Practice Research Datalink (CPRD) Gold (ISAC application #20_000245). Databases used are summarised as follows:
+
+* IQVIA Longitudinal Patient Data Belgium (LPD Belgium) database consists of data collected from electronic medical records and longitudinal patient database in general practice settings. Data coverage spans 2 million unique patients, 688 care sites, 15 million visits, and 140 million service records. Dates of care include 2008 forward.
+* IQVIA Ambulatory EMR (AEMR) consists of longitudinal, de-identified electronic health records originating from ambulatory clients in the US.  Data coverage spans 76 million unique patients with 414 million visits. The data contains detailed clinical information that captures important health outcomes such as lab test results and vital signs in an outpatient care setting. Dates of care include 2006 forward.
+* IQVIA Open Claims is a large pre-adjudicated claims database aggregated from clearinghouses that process commercial insurance claims. Data coverage spans over 280 million unique patient lives and represents more than 80% of American Medical Association physicians submitting medical and pharmacy claims in the United States. Care locations include both inpatient and outpatient facilities. Dates of care include 2005 forward.
+* Clinical Practice Research Datalink (CPRD) consists of anonymised primary care data collected from a network of GP practices across the UK. The data encompass 50 million patients, including 16 million currently registered patients.
+
+Study sample size was determined by availability of data in each database: we used all available data.
+
+## Participants
+Patients were eligible for inclusion in the cohort if they had at least one visit recorded in the database in a given year and cases were defined as patients undergoing ASAD for the first time in their records in a given year. The following codes were used to identify ASAD cases and were identified by two authors with surgical expertise (AJC and JR):
+
+* Arthroscopic decompression of subacromial joint
+* Acromioplasty of shoulder
+* Partial acromioplasty
+* Arthroscopic acromioplasty
+* Arthroscopy, shoulder, surgical; decompression of subacromial space with partial acromioplasty, with coracoacromial ligament (ie, arch) release, when performed (List separately in addition to code for primary procedure)
+* Acromioplasty or acromionectomy, partial, with or without coracoacromial ligament release
+
+## Quantitative variables and statistical methods
+Incidence rates of ASAD per 10,000 person years were calculated as cases*10,000/person years. Characteristics of patients undergoing ASAD were assessed at time of surgery and descriptive statistics were calculated per year in which surgery was conducted. There was no missing data (that we were able to determine) in the included databases.
+
+# Results
+We obtained data from CPRD for the UK and, from IQVIA, for the US (two databases: IQVIA OpenClaims and IQVIA AEMR) and Belgium (IQVIA LPD Belgium). Number of patients, person years, cases, and years included per database are summarised in Table \@ref(tab:database-table). Characteristics of patients by year and database at the time of ASAD, and number of cases per year are given in the supplementary material. In the US, IQVIA OpenClaims provided a much larger sample: we therefore report results only for OpenClaims. 
+
+```{r calculate incidence}
+remove <- summary_incidence %>% 
+  filter(db_id == "BELG202006") %>%
+  filter(year <= 2010)
+remove <- summary_incidence %>% 
+  filter(db_id == "AMBEMR202005" & year <= 2006) %>% 
+  bind_rows(remove)
+summary_incidence <- setdiff(summary_incidence, remove)
+
+stratified_incidence <- stratified_incidence %>% 
+  filter(db_id == "cdmgold202007" | db_id =="OPEN202005")
+  
+# calculate incidence 
+stratified_incidence <- stratified_incidence %>% 
+  mutate(cases = as.numeric(cases)) %>% 
+  mutate(incidence = cases*10000/timeAtRisk)
+summary_incidence <- summary_incidence %>% 
+  mutate(incidence = cases*10000/timeAtRisk)
+
+# rename some items for ease of plotting later
+# define database names
+db_names <- c(ambemr = "US (AmbEMR)", belgium = "Belgium (IQVIA LPD Belgium)", 
+              cprd = "UK (CPRD)", open = "US (IQVIA OpenClaims)")
+
+stratified_incidence[stratified_incidence$db_id == "cdmgold202007", "db_id"] <- db_names["cprd"]
+stratified_incidence[stratified_incidence$db_id == "OPEN202005", "db_id"] <- db_names["open"]
+
+summary_incidence[summary_incidence$db_id == "AMBEMR202005", "db_id"] <- db_names["ambemr"]
+summary_incidence[summary_incidence$db_id == "BELG202006", "db_id"] <- db_names["belgium"]
+summary_incidence[summary_incidence$db_id == "cdmgold202007", "db_id"] <- db_names["cprd"]
+summary_incidence[summary_incidence$db_id == "OPEN202005", "db_id"] <- db_names["open"]
+```
+
+```{r stats in text}
+# generate some of the stats referred to in the text
+
+range_N <- lapply(db_names, function (x){
+  x <- summary_incidence %>%
+    filter(db_id == x) %>%
+    select(total) %>%
+    range()
+  paste0(fInt(x[1]), " - ", fInt(x[2]))
+})
+names(range_N) <- db_names
+
+range_pyrs <- lapply(db_names, function (x){
+  x <- summary_incidence %>%
+    filter(db_id == x) %>%
+    select(timeAtRisk) %>%
+    range()
+  paste0(fInt(x[1]), " - ", fInt(x[2]))
+})
+names(range_pyrs) <- db_names
+
+range_cases <- lapply(db_names, function (x){
+  x <- summary_incidence %>%
+    filter(db_id == x) %>%
+    select(cases) %>%
+    range()
+  paste0(fInt(x[1]), " - ", fInt(x[2]))
+})
+names(range_cases) <- db_names
+```
+
+```{r database-table}
+db_table <- data.frame(Database = unlist(db_names),
+           Total_patients = unlist(range_N),
+           Person_years = unlist(range_pyrs),
+           Cases = unlist(range_cases), 
+           row.names = NULL) 
+kable(db_table, align = "l", caption = "Summary of databases by total patients eligible for analysis, person years, cases, and years with at least one ASAD case. Ranges are given for each variable for the data included in this study (i.e. only for those years with at least one case)", 
+      col.names = c("Database", "Total patients", "Person years", "Cases"))
+
+```
+
+## Outcome data 
+Incidence was highly variable across databases and time (Figure \@ref(fig:incidence-summary-plot)). US incidence rates were considerably higher than those in UK and Belgium. In the UK, ASAD incidence plateaued from 2010-2014, and has consistently fallen since. There was no clear pattern in US incidence over a similar time period based on analysis of claims data. Note that historical rates in the US decrease from 2011 due to a smaller number of contributing care sites represented in the database during that period of time. The most stable data is available over the last 10 years. The number of recorded cases was extremely small in Belgium so any findings need to be interpreted with caution, but there was no clear pattern in incidence over time. Despite changes in the interim period, rates at the beginning and end of the time periods studied in the US and UK were similar (2005 - 2019).
+
+Changes over time were similar within different age and sex strata of the population in US and UK data (Figure \@ref(fig:incidence-stratified-plot); Belgium data are not shown because there were too few cases in several strata which could compromise anonymity). Males had higher rates of ASAD than females, the age group with the highest incidence was 50 to <65, and age <35 had the lowest incidence.
+
+(ref:incidence) Incidence of ASAD per 10,000 person years in Belgium, UK and US. The FIMPACT[@paavolaSubacromialDecompressionDiagnostic2018] trial recruited in Finland from 2005 to 2013 and published in July 2018. The CSAW[@beardArthroscopicSubacromialDecompression2018] trial recruited in the UK from 2012 to 2015 and was published in January 2018. Both trials did not find evidence of a clinically important difference compared to diagnostic arthroscopy (i.e. placebo surgery).
+
+```{r incidence-summary-plot, dpi = 300, fig.height = 4, fig.width = 8, fig.cap= '(ref:incidence)'}
+p <- summary_incidence %>% 
+  filter(db_id != "US (AmbEMR)") %>%
+  ggplot(aes(x = year, y = incidence, group = db_id)) +
+  geom_line(aes(color = db_id)) + 
+  scale_x_continuous(name = "Year", breaks = seq(2005, 2019, 2)) +
+  ylab("Incidence/10,000 person years") +
+  scale_colour_discrete(name  ="") + #labels = c("AmbEMR", "Open claims"))
+  theme(legend.position="bottom")
+
+# labels for important events
+p+geom_vline(xintercept = 2005, linetype = "dotted")+
+  geom_label(label = "Start of\nFIMPACT", x = 2005.13, y = 15) +
+  geom_vline(xintercept = 2012, linetype = "dotted")+ 
+  geom_label(label = "Start of\nCSAW", x = 2012, y = 15)+
+  geom_vline(xintercept = 2017.9, linetype = "dotted") +
+  geom_label(label="CSAW\npublication", x = 2017.63, y = 13.2) +
+  geom_vline(xintercept = 2018.6, linetype = "dotted")+
+  geom_label(label="FIMPACT\npublication", x = 2018.83, y = 16)
+
+```
+
+```{r incidence-stratified-plot, dpi = 300, fig.height = 4, fig.width = 8, echo= F, fig.cap= "Incidence of ASAD per 10,000 person years in UK (CPRD) and US (IQVIA OpenClaims), stratified by patient characteristics. Note that the y-axis scales differ."}
+p <- stratified_incidence %>% 
+  filter(db_id != "US (AmbEMR)") %>%
+  filter(db_id != "Belgium (IQVIA LPD Belgium)") %>% 
+  ggplot(aes(x = year, y = incidence, group = strata_name)) +
+  geom_line(aes(color = strata_name))+
+  scale_x_continuous(name = "Year", breaks= pretty_breaks()) +
+  ylab("Incidence/10,000 person years") + 
+  theme(axis.text.x = element_text(angle=50, hjust=1)) +
+  theme(legend.position = "right") +
+  scale_colour_discrete(name  ="Patient characteristic")
+  
+p+ facet_wrap(~db_id, scales = "free") # just delete scales free y to fix axes
+```
+
+# Discussion 
+We present the most comprehensive analysis of international ASAD rates to date and the first UK-wide analysis of ASAD incidence for shoulder impingement including data from 2018 and 2019, (i.e. after publication of robust trials questioning the effectiveness of ASAD). The analysis shows that UK incidence has fallen since a peak in 2011 while there is no clear pattern for the US. US rates were higher than UK rates throughout the study period and remain high.
+
+## Comparisons to other literature
+UK data are consistent with patterns observed in previous studies, though US data contrast with a recent study. Hospital episode statistics data from 2000/2001 to 2009/2010 showed increasing rates of ASAD use in England[@judgeTemporalTrendsGeographical2014]. UK incidence rates in this study increased from 2005 to 2010 by a similar magnitude. ASAD incidence in Scotland decreased from 2014 to 2018[@jenkinsChangingIncidenceArthroscopic2020], a finding observed UK-wide in our study. A recent analysis of US claims data indicated that from 2010 to 2018 ASAD incidence declined by 39.6% from 118.0 to 71.3 per 100,000[@curtisNationalTrendsShow2021]; we find ASAD incidence rates in a similar range but increasing by 12.9% from 10.1 to 11.4 per 10,000 person years over the same period. Real world data have different rates of capture, and there is potential subjectivity in case definitions that may contribute to variability in the the rates reported. 
+
+## Interpretation
+UK ASAD rates show a clear and consistent downward trend while US rates remain high (`r round(filter(summary_incidence, db_id == "US (IQVIA OpenClaims)", year == "2019")$incidence, 1)`/10,000 person years in US in 2019 vs. `r round(filter(summary_incidence, db_id == "UK (CPRD)", year == "2019")$incidence, 1)`/10,000 person years in UK) despite lack of evidence indicating, for certain shoulder pathology groups, effectiveness over placebo surgery. The decline in ASAD incidence in UK from 2011 to 2019 coincides with the conduct and publication of CSAW (conducted 2012 to 2015, published 2018)[@beardArthroscopicSubacromialDecompression2018], FIMPACT (conducted 2005 - 2013, published 2018) [@paavolaSubacromialDecompressionDiagnostic2018] and a Cochrane review (published 2019) of combined study data for ASAD[@karjalainenSubacromialDecompressionSurgery2019]. Interestingly, a large proportion of the decrease in ASAD happened before any results of the trials were available, potentially suggesting that the awareness over the uncertainty in the effectiveness of ASAD raised by running of the national trial contributed to the reduction, in what could be termed an “ongoing RCT effect”. A paper highlighting the rapid spread of ASAD for shoulder impingement in the absence of evidence of benefit may also have contributed to the decline[@judgeTemporalTrendsGeographical2014], though cannot explain it fully as it was published in 2014. It seems most plausible that a combination of these factors is responsible. 
+
+Reasons for the lack of change in rates in the US are unclear. It is possible that the “ongoing RCT effect” is specific to countries or populations in which trials are conducted, and that results of surgical RCTs take more time to change practice internationally than nationally, despite the international dissemination of results. However, data from Sweden suggest a decrease in ASAD similar to that observed in our study, and the results of the trials are rapidly informing clinical guidelines (personal communication, Stefan Lohmander). Clinicians in countries such as the US may not view the results of the studies conducted in UK and Finland to be generalisable to their practice; however, the patient cohorts recruited to these trials are clearly defined in the trial publications and are not unique to the country of origin.
+
+## Limitations
+Database coverage and reporting of procedures changes over time, so some variation in ASAD incidence may not be attributable to real changes in ASAD surgery rates. It is challenging to address these sources of error; however, we have included data from some of the largest and most representative sources available and these limitations are applicable to any research using them. In the US data, there was discordance between incidence rates in the two data sources, with rates lower from IQVIA AEMR. Lower rates most likely reflect limited capture of these procedures in an outpatient setting. EMR data have been shown in other contexts to substantially underestimate care and utilisation[@maengPS111ComparisonElectronic2014]. We therefore included IQVIA Open Claims data only in our results. 
+
+Few cases were recorded in Belgium, which could reflect low incidence or could reflect that ASAD was not captured in the data. The latter seems more plausible since the database, LPD Belgium, largely consists of outpatient data, which is not designed to capture surgery. Regardless, the number of cases was too low to draw meaningful conclusions about trends in patient characteristics or incidence. Also, we tried but were unable to retrieve incidence data for Germany, France, and Italy with the instantiated cohort definitions.
+
+Certain codes used to identify the cohort may result in the inclusion of cases that are not arthroscopic (i.e. are open) SAD or not ASAD specifically for shoulder impingement. Acromioplasty or acromionectomy, partial, with or without coracoacromial ligament release, for example, could potentially represent open SAD. However, open SAD is much less common, for example in the US comprising on 5% of SAD surgeries performed[@curtisNationalTrendsShow2021]. ASADs performed as part of other shoulder operations like rotator cuff repair or resection of calcific deposit may not have been excluded with the used codes. There is inevitably a trade-off between sensitivity and specificity of codes; with two experienced shoulder surgeons helping in our cohort definition, we feel the codes used were reasonable. 
+
+## Conclusions
+We found evidence that the impact of the conduct and publication of two large ASAD surgical RCTs differed between the UK and the US. In the UK, ASAD rates fell both during and after completion of a large national trial. This highlights the successful engagement of surgeons and healthcare commissioners in adopting the results of the trial, and supports the ongoing commitment in the UK to fund and conduct surgical RCTs to address treatment uncertainties. While such evidence should translate internationally, it has not, and further work is needed to understand the barriers or concerns around the international uptake of high quality evidence.  
+
+# Acknowledgements
+The research was supported by the National Institute for Health Research (NIHR) Oxford  Biomedical Research Centre (BRC). DPA is funded through a NIHR Senior Research Fellowship (Grant number SRF-2018-11-ST2-004). The funder played no role in the study. The views expressed in this publication are those of the author(s) and not necessarily those of the NHS, the National Institute for Health Research or the department of Health.
+
+# Conflict of interest statement
+DPA's research group has received grant support from Amgen, Chesi-Taylor, Novartis, and UCB Biopharma. His department has received advisory or consultancy fees from Amgen, Astellas, AstraZeneca, Johnson, and Johnson, and UCB Biopharma and fees for speaker services from Amgen and UCB Biopharma. Janssen, on behalf of IMI-funded EHDEN and EMIF consortiums, and Synapse Management Partners have supported training programmes organised by DPA's department and open for external participants organized by his department outside submitted work. All other authors declare no conflict of interest. 
+
+# Reproducibility and data availability
+This article was written in RMarkdown and can be reproduced from the publicly available aggregate data and code provided on GitHub. Some data had to be removed because it contained cells with low counts which could compromise anonymity. RStudio[@rstudioteamRStudioIntegratedDevelopment2020] and several R[@rcoreteamLanguageEnvironmentStatistical2020a] packages[@kassambaraGgpubrGgplot2Based2020; @usheyRenvProjectEnvironments2020; @wickhamReadxlReadExcel2019; @wickhamScalesScaleFunctions2020; @wickhamWelcomeTidyverse2019; @xieKnitrGeneralpurposePackage2021; @zhuKableExtraConstructComplex2020] were used. 
+
+# References
+
+
+

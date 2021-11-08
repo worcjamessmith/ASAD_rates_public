@@ -1,0 +1,10 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+Notes.Rmd
+*.pdf
+*.html
+*.docx
+*.log
+!my_style.docx
