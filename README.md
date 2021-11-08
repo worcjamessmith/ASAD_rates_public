@@ -1,5 +1,3 @@
-This repo was used up to submission of the preprint on 8th November 2021. I then copied its contents, apart from the original data, to a new repo that could be made publicly available to link to in the preprint and article submission. I could not use this repo because it contains some low cell counts in the version histories that Dani and Kristin said should not be shared publicly. Those data are available in the original data folder, so changing the file path in the relevant files to point to that, in this repo, should allow everything to be redone as it was orignally.
-
 This is the repo for the paper titled: "International impact of large multi-centre surgical trials of arthroscopic subacromial decompression". It contains the aggregated data, analysis scripts and executable manuscript file.
 
 # Manuscript
