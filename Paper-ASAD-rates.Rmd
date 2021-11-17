@@ -1,13 +1,16 @@
 ---
 title: "International impact of large multi-centre surgical trials of arthroscopic subacromial decompression"
+header-includes:
+   - \usepackage{lineno}
+   - \linenumbers
 output:
-  bookdown::pdf_document2: 
-    keep_tex: no
-    toc: false
-    number_sections: false
   bookdown::word_document2:
     toc: false
     reference_docx: paper/my_style.docx
+    number_sections: false
+  bookdown::pdf_document2: 
+    keep_tex: no
+    toc: false
     number_sections: false
   bookdown::html_document2:
     toc: false
