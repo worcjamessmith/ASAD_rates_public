@@ -1,13 +1,13 @@
 ---
 title: "International impact of large multi-centre surgical trials of arthroscopic subacromial decompression"
 output:
-  bookdown::pdf_document2: 
-    keep_tex: no
-    toc: false
-    number_sections: false
   bookdown::word_document2:
     toc: false
     reference_docx: paper/my_style.docx
+    number_sections: false
+  bookdown::pdf_document2: 
+    keep_tex: no
+    toc: false
     number_sections: false
   bookdown::html_document2:
     toc: false
@@ -33,6 +33,10 @@ Authors for correspondence: Daniel Prieto-Alhambra (daniel.prietoalhambra@ndorms
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F)
 
+doc.type <- knitr::opts_knit$get('rmarkdown.pandoc.to')
+if (is.null(doc.type))
+  doc.type <- "X" # so code will run when not knitting
+
 options(scipen=999)
 
 ```
@@ -42,6 +46,7 @@ library(knitr)
 library(ggpubr)
 library(tidyverse)
 library(scales) # for pretty_breaks()
+library(flextable) 
 
 # ggplot 2 set up 
 theme_set(theme_classic())
@@ -214,14 +219,23 @@ names(range_cases) <- db_names
 ```
 
 ```{r database-table}
+
 db_table <- data.frame(Database = unlist(db_names),
            Total_patients = unlist(range_N),
            Person_years = unlist(range_pyrs),
            Cases = unlist(range_cases), 
            row.names = NULL) 
-kable(db_table, align = "l", caption = "Summary of databases by total patients eligible for analysis, person years, cases, and years with at least one ASAD case. Ranges are given for each variable for the data included in this study (i.e. only for those years with at least one case)", 
-      col.names = c("Database", "Total patients", "Person years", "Cases"))
+colnames(db_table) <- c("Database", "Total patients", "Person years", "Cases")
 
+if (doc.type == "docx"){
+  ft <- flextable(db_table)
+  ft <- set_caption(ft, caption = "Summary of databases by total patients eligible for analysis, person years, cases, and years with at least one ASAD case. Ranges are given for each variable for the data included in this study (i.e. only for those years with at least one case)") 
+  ft <- width(ft, width = 1.5)
+  ft <- flextable::font(ft, part = "all", fontname = "Calibri")
+  ft
+} else {
+  kable(db_table, align = "l", caption = "Summary of databases by total patients eligible for analysis, person years, cases, and years with at least one ASAD case. Ranges are given for each variable for the data included in this study (i.e. only for those years with at least one case)")
+}
 ```
 
 ## Outcome data 
@@ -297,6 +311,9 @@ DPA's research group has received grant support from Amgen, Chesi-Taylor, Novart
 
 # Patient and public involvement
 Patients and the public were not involved in the design, conduct, reporting, or dissemination plans of this manuscript.
+
+# Ethics statement
+Some databases used (IQVIA LPD Belgium, IQVIA Open Claims, IQVIA Ambulatory EMR) in these analyses are commercially available, syndicated data assets that are licensed by contributing authors for observational research. These assets are de-identified commercially available data products that could be purchased and licensed by any researcher. The collection and de-identification of these data assets is a process that is commercial intellectual property and not privileged to the data licensees and the co-authors on this study. Licensees of these data have signed Data Use Agreements with the data vendors which detail the usage protocols for running retrospective research on these databases. All analyses performed in this study were in accordance with Data Use Agreement terms as specified by the data owners. As these data are deemed commercial assets, there is no Institutional Review Board applicable to the usage and dissemination of these result sets or required registration of the protocol with additional ethics oversight. Compliance with Data Use Agreement terms, which stipulate how these data can be used and for what purpose, is sufficient for the licensing commercial entities. Further inquiry related to the governance oversight of these assets can be made with the respective commercial entity: IQVIA (iqvia.com). At no point in the course of this study were the authors of this study exposed to identified patient-level data. All result sets represent aggregate, de-identified data that are represented at a minimum cell size of 5 to reduce potential for re-identification. ISAC approval was received for use of Clinical Practice Research Datalink (CPRD) data.
 
 # Reproducibility and data availability
 This article was written in RMarkdown and can be reproduced from the publicly available aggregate data and code provided on GitHub (https://github.com/worcjamessmith/ASAD_rates_public). Some data could not be shared because it contained cells with low counts which could compromise anonymity. RStudio[@rstudioteamRStudioIntegratedDevelopment2020] and several R[@rcoreteamLanguageEnvironmentStatistical2020a] packages[@kassambaraGgpubrGgplot2Based2020; @usheyRenvProjectEnvironments2020; @wickhamReadxlReadExcel2019; @wickhamScalesScaleFunctions2020; @wickhamWelcomeTidyverse2019; @xieKnitrGeneralpurposePackage2021; @zhuKableExtraConstructComplex2020] were used. 
